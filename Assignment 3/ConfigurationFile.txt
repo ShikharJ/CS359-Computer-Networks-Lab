@@ -1,0 +1,3 @@
+THREAD=2
+IPA=127.0.0.1,172.16.1.12
+DEFAULT=/home/shikhar/Downloads/Computer Networks/Assignment 3/index.html
