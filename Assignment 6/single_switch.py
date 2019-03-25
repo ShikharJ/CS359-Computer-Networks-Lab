@@ -41,13 +41,15 @@ if __name__ == '__main__':
     runner()
     count = 0
     print("Required Throughput")
-    print("Time Interval          Throughput")
+    print("Time Interval       Throughput")
     with open("throughput.txt") as f:
         contents = f.readlines()
     contents = [x.strip() for x in contents]
     for i in range(6, len(contents)):
         line = contents[i].split()
         if i <= 9:
-            print("[%s %s %s] ---> %s %s" % (line[2], line[3], line[4], line[7], line[8]))
+            print("[%s %s %s] ---> %s %s" % (line[2], line[3], line[4], float(line[5]) / 2, line[6] + "/sec"))
+        elif i == len(contents) - 1:
+            print("[%s %s] ---> %s %s " % (line[2], line[3], float(line[4]) / 20, line[5] + "/sec"))
         else:
-            print("[%s %s] ---> %s %s " % (line[2], line[3], line[4], line[7]))
+            print("[%s %s] ---> %s %s " % (line[2], line[3], float(line[4]) / 2, line[5] + "/sec"))

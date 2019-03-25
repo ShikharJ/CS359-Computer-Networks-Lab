@@ -1,7 +1,6 @@
 from mininet.topo import Topo
 from mininet.net import Mininet
 from mininet.link import TCLink
-from mininet.node import CPULimitedHost
 from mininet.util import dumpNodeConnections
 from mininet.log import setLogLevel
 
@@ -11,33 +10,28 @@ class MultiSwitch(Topo):
     Base class for defining the topology.
     """
     def build(self):
-        s = self.addSwitch('s1')
-        t = self.addSwitch('t1')
-        a = self.addHost('a', cpu = 0.5 / 6)
-        b = self.addHost('b', cpu = 0.5 / 6)
-        c = self.addHost('c', cpu = 0.5 / 6)
-        d = self.addHost('d', cpu = 0.5 / 6)
-        source = self.addHost('source', cpu = 0.5 / 6)
-        sink = self.addHost('sink', cpu = 0.5 / 6)
-        self.addLink(a, s, bw = 5, delay = '3ms', loss = 2)
-        self.addLink(b, s, bw = 5, delay = '3ms', loss = 2)
-        self.addLink(c, t, bw = 5, delay = '3ms', loss = 2)
-        self.addLink(d, t, bw = 5, delay = '3ms', loss = 2)
-        self.addLink(s, t, bw = 15, delay = '2ms')
-        self.addLink(c, sink, bw = 15, delay = '2ms')
-        self.addLink(source, a, bw = 15, delay = '2ms')
-        self.addLink(source, b, bw = 15, delay = '2ms')
+        e = self.addSwitch('e1', ip = '192.168.0.100/24', mac = '00:00:00:00:00:09')
+        f = self.addSwitch('f1', ip = '192.168.0.101/24', mac = '00:00:00:00:00:10')
+        a = self.addHost('a', ip = '192.168.0.102/24', mac = '00:00:00:00:00:00')
+        b = self.addHost('b', ip = '192.168.0.103/24', mac = '00:00:00:00:01:00')
+        c = self.addHost('c', ip = '192.168.0.104/24', mac = '00:00:00:00:02:00')
+        s = self.addHost('s', ip = '192.168.0.106/24', mac = '00:00:00:00:04:00')
+        t = self.addHost('t', ip = '192.168.0.107/24', mac = '00:00:00:00:05:00')
+        self.addLink(a, e, bw = 5, delay = '3ms', loss = 2, max_queue_size = 300)
+        self.addLink(b, e, bw = 5, delay = '3ms', loss = 2, max_queue_size = 300)
+        self.addLink(c, e, bw = 5, delay = '3ms', loss = 2, max_queue_size = 300)
+        self.addLink(s, f, bw = 5, delay = '3ms', loss = 2, max_queue_size = 300)
+        self.addLink(t, f, bw = 5, delay = '3ms', loss = 2, max_queue_size = 300)
+        self.addLink(e, f, bw = 15, delay = '2ms')
 
 
 def runner():
     topo = MultiSwitch()
-    net = Mininet(topo = topo, host = CPULimitedHost, link = TCLink)
+    net = Mininet(topo = topo, link = TCLink)
     net.start()
     print "Dumping host connections"
     dumpNodeConnections(net.hosts)
     print "Testing network connectivity"
-    source = net.get('source')
-    sink = net.get('sink')
     net.pingAll()
     net.stop()
 
