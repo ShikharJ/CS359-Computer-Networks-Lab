@@ -8,6 +8,9 @@ from time import sleep
 
 
 def server(net):
+    """
+    Base class for defining the topology.
+    """
     h1 = net.get('h1')
     h1.cmd('iperf -s -p 5111 -i 2 > throughput.txt')
 
@@ -29,7 +32,6 @@ def runner():
     net = Mininet(topo = topo)
     net.start()
     dumpNodeConnections(net.hosts)
-    h1 = net.get('h1')
     h2 = net.get('h2')
     thread.start_new_thread(server, (net,))
     h2.cmd('iperf -c 10.0.0.1 -p 5111 -t 20')
